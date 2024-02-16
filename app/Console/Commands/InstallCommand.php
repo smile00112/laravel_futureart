@@ -29,7 +29,6 @@ class InstallCommand extends Command
         $this->call('key:generate');
         $this->call('storage:link');
         $this->call('migrate');
-        //$this->call('db:seed');
         $this->call('moonshine:user');
         return self::SUCCESS;
     }
