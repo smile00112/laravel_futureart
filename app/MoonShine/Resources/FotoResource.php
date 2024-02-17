@@ -7,6 +7,8 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Foto;
 
+use MoonShine\Decorations\Column;
+use MoonShine\Decorations\Grid;
 use MoonShine\Fields\Field;
 use MoonShine\Fields\Image;
 use MoonShine\Fields\Relationships\BelongsTo;
@@ -33,42 +35,40 @@ class FotoResource extends ModelResource
     {
 
         return [
-            Block::make([
+            Grid::make([
+                Column::make([
+                    Block::make([
 
-                ID::make()->sortable(),
+                    ID::make()->sortable(),
 
-                Text::make('Заголовок', 'title')
-                    ->required(),
+                    Text::make('Заголовок', 'title')
+                        ->required(),
 
-                Slug::make('Slug', 'slug')
-                    ->from('title')
-                    ->unique()
-                    ->separator('-')
-                    ->hideOnIndex(),
+                    Slug::make('Slug', 'slug')
+                        ->from('title')
+                        ->unique()
+                        ->separator('-')
+                        ->hideOnIndex(),
 
+                    Url::make('Ссылка', 'qr-code-link')
+                        ->link('', name:'qr-code', blank: true)
+                        ->copy(),
 
-                Url::make('Ссылка', '',
-                    function(Foto $item){
-                        return  '/qr-code/' . ($item->album ? $item->album->slug : '???') . '/' .   $item->slug;
-                    }
-                )
-                    ->hint('Url')
-                    ->link('', name:'qr-code', blank: true)
-                    ->copy()
-                    ->expansion('url')
-                    ->hideOnForm(),
+                    Image::make('Фото', 'thumbnail')
+                        ->removable()
+                        ->disk('public')
+                        ->dir('photo'),
 
-                Image::make('Фото', 'thumbnail')
-                    ->removable()
-                    ->disk('public')
-                    ->dir('photo'),
+                    Switcher::make('Вкл/Выкл', 'status')
+                        ->updateOnPreview()
+                        ->default(true),
 
-                Switcher::make('Вкл/Выкл', 'status')->default(true),
+                    BelongsTo::make('Альбом', 'album')
+                        //->asyncSearch()
+                        ->hideOnIndex(),
 
-                BelongsTo::make('Альбом', 'album')
-                    //->asyncSearch()
-                    ->hideOnIndex(),
-
+                ]),
+               ])->columnSpan(6),
             ]),
         ];
     }

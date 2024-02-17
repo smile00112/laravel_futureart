@@ -26,8 +26,10 @@ class Foto extends Model
         return $this->belongsTo(Album::class);
     }
 
-    public function getQrLinkAttribute():string
+    public function getQrCodeLinkAttribute():string
     {
-        return "/qr-code/{$this->album->slug}/{$this->slug}";
+        return url('/') . "/qr-code/{$this->album->slug}/{$this->slug}";
     }
+
+
 }
