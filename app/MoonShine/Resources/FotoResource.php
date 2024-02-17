@@ -7,12 +7,15 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Foto;
 
+use MoonShine\Fields\Field;
 use MoonShine\Fields\Image;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Slug;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Url;
+use MoonShine\Handlers\ExportHandler;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
@@ -44,16 +47,14 @@ class FotoResource extends ModelResource
                     ->hideOnIndex(),
 
 
-                Url::make('qr')
-                    ->hint('Url') //'/qr-code/' . $this->item->album->slug . '/' . $this->item->slug
-                    ->link( function(){
-                        return
-                            $this->item && $this->item->album
-                                ?
-                            '/qr-code/' . $this->item->album->slug . '/' . $this->item->slug
-                                :
-                            '#';
-                    } , 'qr-code', blank: true)
+                Url::make('Ссылка', '',
+                    function(Foto $item){
+                        return  '/qr-code/' . ($item->album ? $item->album->slug : '???') . '/' .   $item->slug;
+                    }
+                )
+                    ->hint('Url')
+                    ->link('', name:'qr-code', blank: true)
+                    ->copy()
                     ->expansion('url')
                     ->hideOnForm(),
 
@@ -75,5 +76,14 @@ class FotoResource extends ModelResource
     public function rules(Model $item): array
     {
         return [];
+    }
+
+    public function import(): ?ImportHandler
+    {
+        return null;
+    }
+    public function export(): ?ExportHandler
+    {
+        return null;
     }
 }

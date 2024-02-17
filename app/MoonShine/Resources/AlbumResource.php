@@ -33,6 +33,8 @@ use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\TinyMce;
 use MoonShine\Fields\Url;
+use MoonShine\Handlers\ExportHandler;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
@@ -55,11 +57,25 @@ class AlbumResource extends ModelResource
 //        'fotos',
 //    ];
 
+    public function actions(): array
+    {
+        return [];
+    }
+
+    public function import(): ?ImportHandler
+    {
+        return null;
+    }
+    public function export(): ?ExportHandler
+    {
+        return null;
+    }
+
     public function fields(): array
     {
         return [
                 ID::make()
-                    ->useOnImport()
+                   // ->useOnImport()
                     ->showOnExport()
                     ->sortable(),
 

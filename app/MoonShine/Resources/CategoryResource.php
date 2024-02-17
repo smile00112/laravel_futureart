@@ -11,6 +11,8 @@ use MoonShine\Decorations\Block;
 use MoonShine\Enums\PageType;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
+use MoonShine\Handlers\ExportHandler;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Pages\Crud\DetailPage;
 use MoonShine\Pages\Crud\FormPage;
 use MoonShine\Pages\Crud\IndexPage;
@@ -82,5 +84,14 @@ class CategoryResource extends TreeResource
     public function sortKey(): string
     {
         return $this->sortColumn();
+    }
+
+    public function import(): ?ImportHandler
+    {
+        return null;
+    }
+    public function export(): ?ExportHandler
+    {
+        return null;
     }
 }
