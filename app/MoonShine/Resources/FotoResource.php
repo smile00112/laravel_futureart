@@ -60,7 +60,7 @@ class FotoResource extends ModelResource
                         ->dir('photo'),
 
                     Switcher::make('Вкл/Выкл', 'status')
-                        ->updateOnPreview()
+                        ->updateOnPreview(resource: $this)
                         ->default(true),
 
                     BelongsTo::make('Альбом', 'album')
